@@ -63,7 +63,7 @@ Shapes above the 4th fret slide the window down the neck and label it (`5fr`, `1
 Add the package in Xcode (**File → Add Package Dependencies…**) or in `Package.swift`:
 
 ```swift
-.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.3.0")
+.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.4.0")
 // target dependency: .product(name: "ChordDiagram", package: "guitar-charts")
 ```
 
@@ -83,7 +83,7 @@ struct ContentView: View {
 ```kotlin
 // app/build.gradle.kts, with mavenCentral() in your repositories
 dependencies {
-    implementation("io.github.liamdotpro:chord-diagram-compose:0.3.0")
+    implementation("io.github.liamdotpro:chord-diagram-compose:0.4.0")
 }
 ```
 
