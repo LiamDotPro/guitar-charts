@@ -1,0 +1,86 @@
+{
+  "$comment": "README figures, written to docs/images by `npm run generate`. SVG figures are drawn from shared/reference/chord-layout.js, so they are the exact geometry every platform renders. Android PNGs are copied from the Compose screenshot-test references (run updateDebugScreenshotTest first). Cells take a library id or an inline chord, plus optional name/caption overrides (applied to the chord), accent (a token id), options and download (\"svg\" | \"png\").",
+  "grids": {
+    "hero": {
+      "title": "Ten chord diagrams: C, A minor, G, E minor, D, F, B flat, G at the 3rd fret, A at the 5th fret and E7",
+      "columns": 5,
+      "cells": [
+        { "chord": "C" },
+        { "chord": "Am" },
+        { "chord": "G" },
+        { "chord": "Em" },
+        { "chord": "D" },
+        { "chord": "F" },
+        { "chord": "Bb" },
+        { "chord": "G3" },
+        { "chord": { "name": "A", "frets": [5, 7, 7, 6, 5, 5], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 5, "from": 0, "to": 5, "finger": 1 } } },
+        { "chord": { "name": "E7", "frets": [0, 2, 0, 1, 0, 0], "fingers": [0, 2, 0, 1, 0, 0] } }
+      ]
+    },
+    "cards": {
+      "title": "Chord cards for C, B flat and G with export links",
+      "columns": 3,
+      "cells": [
+        { "chord": "C", "download": "svg" },
+        { "chord": "Bb", "download": "png" },
+        { "chord": "G3", "download": "svg" }
+      ]
+    },
+    "custom": {
+      "title": "Custom shapes: Cadd9, Dsus4 and E7",
+      "columns": 3,
+      "cells": [
+        { "chord": { "name": "Cadd9", "frets": [-1, 3, 2, 0, 3, 3], "fingers": [0, 2, 1, 0, 3, 4] } },
+        { "chord": { "name": "Dsus4", "frets": [-1, -1, 0, 2, 3, 3], "fingers": [0, 0, 0, 1, 3, 4] } },
+        { "chord": { "name": "E7", "frets": [0, 2, 0, 1, 0, 0], "fingers": [0, 2, 0, 1, 0, 0] } }
+      ]
+    },
+    "barres": {
+      "title": "Barre chords: F at the nut, A at the 5th fret, E at the 12th fret",
+      "columns": 3,
+      "cells": [
+        { "chord": "F" },
+        { "chord": { "name": "A", "frets": [5, 7, 7, 6, 5, 5], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 5, "from": 0, "to": 5, "finger": 1 } } },
+        { "chord": { "name": "E", "frets": [12, 14, 14, 13, 12, 12], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 12, "from": 0, "to": 5, "finger": 1 } } }
+      ]
+    },
+    "progression": {
+      "title": "A I–V–vi–IV progression in G: G, D, E minor, C",
+      "columns": 4,
+      "cells": [
+        { "chord": "G", "caption": "bar 1" },
+        { "chord": "D", "caption": "bar 2" },
+        { "chord": "Em", "caption": "bar 3" },
+        { "chord": "C", "caption": "bar 4" }
+      ]
+    },
+    "accents": {
+      "title": "The four accent colors: terracotta, ink, blue and green",
+      "columns": 4,
+      "cells": [
+        { "chord": "C", "accent": "terracotta" },
+        { "chord": "G", "accent": "ink" },
+        { "chord": "Am", "accent": "blue" },
+        { "chord": "F", "accent": "green" }
+      ]
+    },
+    "fingers": {
+      "title": "F with and without finger numbers",
+      "columns": 2,
+      "cells": [
+        { "chord": "F" },
+        { "chord": "F", "options": { "showFingers": false } }
+      ]
+    }
+  },
+  "anatomy": {
+    "title": "Anatomy of a diagram: muted string, open string, fret window, barre and finger number",
+    "chord": { "name": "D/A", "frets": [-1, 0, 7, 7, 7, 5], "fingers": [0, 0, 3, 3, 3, 1], "barre": { "fret": 7, "from": 2, "to": 4, "finger": 3 } }
+  },
+  "export": { "chord": "Bb", "scale": 2 },
+  "android": {
+    "sheet-phone": "ReadmeExamplesKt/ReadmeSheetPhone",
+    "sheet-wide": "ChordScreenshotsKt/SheetWide",
+    "library": "ChordScreenshotsKt/LibraryCards"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "name": "guitar-charts",
+  "private": true,
+  "description": "Chord diagram component — shared layout spec with Swift, Kotlin and React Native ports",
+  "scripts": {
+    "generate": "node shared/scripts/generate.mjs",
+    "check": "node shared/scripts/generate.mjs --check"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
