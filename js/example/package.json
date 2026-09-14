@@ -1,6 +1,6 @@
 {
-  "name": "@guitar-charts/example",
-  "version": "0.2.0",
+  "name": "guitar-charts-example",
+  "version": "0.3.0",
   "private": true,
   "description": "Playground rendering the React and React Native (via react-native-web) chord sheets side by side.",
   "type": "module",
@@ -9,8 +9,8 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@guitar-charts/react": "0.2.0",
-    "@guitar-charts/react-native": "0.2.0",
+    "@lightsonfire/chord-diagram-react": "0.3.0",
+    "@lightsonfire/chord-diagram-react-native": "0.3.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "react-native-svg": "^15.15.5",

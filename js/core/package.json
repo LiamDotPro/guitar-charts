@@ -1,6 +1,6 @@
 {
-  "name": "@guitar-charts/core",
-  "version": "0.2.0",
+  "name": "@lightsonfire/chord-diagram-core",
+  "version": "0.3.0",
   "description": "Chord diagram layout: a chord shape in, drawing primitives and SVG out. No dependencies.",
   "license": "MIT",
   "repository": {

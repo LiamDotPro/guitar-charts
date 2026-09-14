@@ -10,7 +10,7 @@ import {
   layoutChord,
   spokenDescription,
   toSvg,
-} from "@guitar-charts/core";
+} from "@lightsonfire/chord-diagram-core";
 import { goldenCases } from "../../test/golden.js";
 
 const shared = (path: string) => JSON.parse(readFileSync(new URL(`../../../shared/${path}`, import.meta.url), "utf8"));

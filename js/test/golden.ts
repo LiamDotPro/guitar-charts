@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import type { Chord, ChordLayout, ChordLayoutOptions } from "@guitar-charts/core";
+import type { Chord, ChordLayout, ChordLayoutOptions } from "@lightsonfire/chord-diagram-core";
 
 export interface GoldenCase {
   id: string;

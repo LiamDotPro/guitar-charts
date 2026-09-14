@@ -1,4 +1,4 @@
-import { ChordFontStacks, layoutChord, spokenDescription, type Chord, type ChordLayout, type ChordLayoutOptions } from "@guitar-charts/core";
+import { ChordFontStacks, layoutChord, spokenDescription, type Chord, type ChordLayout, type ChordLayoutOptions } from "@lightsonfire/chord-diagram-core";
 import type { SVGProps } from "react";
 
 const ANCHOR = { left: "start", center: "middle", right: "end" } as const;

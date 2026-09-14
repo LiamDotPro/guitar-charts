@@ -6,7 +6,7 @@ import {
   type Chord,
   type ChordExportFormat,
   type ChordLayoutOptions,
-} from "@guitar-charts/core";
+} from "@lightsonfire/chord-diagram-core";
 
 /** A PNG of the diagram, `scale` × 146 × 118 pixels, rasterized by the browser from the reference SVG. */
 export async function chordPng(chord: Chord, options?: ChordLayoutOptions, scale = 4): Promise<Blob> {

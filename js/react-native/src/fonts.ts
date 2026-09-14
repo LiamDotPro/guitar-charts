@@ -1,4 +1,4 @@
-import { ChordFontStacks } from "@guitar-charts/core";
+import { ChordFontStacks } from "@lightsonfire/chord-diagram-core";
 import { createContext, useContext } from "react";
 import { Platform } from "react-native";
 

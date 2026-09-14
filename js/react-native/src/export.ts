@@ -6,7 +6,7 @@ import {
   type Chord,
   type ChordExportFormat,
   type ChordLayoutOptions,
-} from "@guitar-charts/core";
+} from "@lightsonfire/chord-diagram-core";
 import type { Svg } from "react-native-svg";
 
 /** An exported diagram, ready to write to disk or share. */

@@ -1,4 +1,4 @@
-import { ChordTokens, layoutChord, type Chord, type ChordExportFormat, type ChordLayoutOptions } from "@guitar-charts/core";
+import { ChordTokens, layoutChord, type Chord, type ChordExportFormat, type ChordLayoutOptions } from "@lightsonfire/chord-diagram-core";
 import { useState, type CSSProperties } from "react";
 import { ChordDiagram } from "./ChordDiagram.js";
 import { downloadChord } from "./export.js";

@@ -12,9 +12,9 @@ export default defineConfig({
   resolve: {
     alias: [
       // work on the packages' source, no build step
-      { find: "@guitar-charts/core", replacement: source("core") },
-      { find: "@guitar-charts/react", replacement: source("react") },
-      { find: "@guitar-charts/react-native", replacement: source("react-native") },
+      { find: "@lightsonfire/chord-diagram-core", replacement: source("core") },
+      { find: "@lightsonfire/chord-diagram-react", replacement: source("react") },
+      { find: "@lightsonfire/chord-diagram-react-native", replacement: source("react-native") },
       // the React Native tab runs through react-native-web
       { find: /^react-native$/, replacement: "react-native-web" },
       { find: "@react-native/assets-registry/registry", replacement: fileURLToPath(new URL("src/assets-registry.ts", import.meta.url)) },

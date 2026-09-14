@@ -1,4 +1,4 @@
-import { ChordFontStacks, ChordTokens } from "@guitar-charts/core";
+import { ChordFontStacks, ChordTokens } from "@lightsonfire/chord-diagram-core";
 import type { CSSProperties } from "react";
 
 export type TextToken = (typeof ChordTokens.text)[keyof typeof ChordTokens.text];

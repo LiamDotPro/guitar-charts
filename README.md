@@ -14,6 +14,10 @@ Chord diagrams for SwiftUI, Jetpack Compose, React and React Native, with the sa
 [![Android minSdk 24](https://img.shields.io/badge/Android-minSdk_24-3DDC84?logo=android&logoColor=white)](#kotlin)
 [![React 18+](https://img.shields.io/badge/React-18%2B-087EA4?logo=react&logoColor=white)](#react)
 [![React Native 0.78+](https://img.shields.io/badge/React_Native-0.78%2B-61DAFB?logo=react&logoColor=black)](#react-native)
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.liamdotpro/chord-diagram-compose?logo=apachemaven&label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.liamdotpro/chord-diagram-compose)
+[![npm](https://img.shields.io/npm/v/@lightsonfire/chord-diagram-react?logo=npm&label=npm)](https://www.npmjs.com/package/@lightsonfire/chord-diagram-react)
+[![CI](https://github.com/LiamDotPro/guitar-charts/actions/workflows/ci.yml/badge.svg)](https://github.com/LiamDotPro/guitar-charts/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 [Quick start](#quick-start) ·
@@ -54,9 +58,10 @@ Shapes above the 4th fret slide the four-fret window down the neck and label it 
 
 ### Swift
 
+Add the package in Xcode (**File → Add Package Dependencies…**) or in `Package.swift`:
+
 ```swift
-// Package.swift
-.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.2.0")
+.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.3.0")
 // target dependency: .product(name: "ChordDiagram", package: "guitar-charts")
 ```
 
@@ -73,15 +78,10 @@ struct ContentView: View {
 
 ### Kotlin
 
-Not on Maven Central yet. Build from a checkout, or run `./gradlew publishToMavenLocal` in `kotlin/`.
-
 ```kotlin
-// the app's settings.gradle.kts
-includeBuild("../guitar-charts/kotlin")
-
-// app/build.gradle.kts
+// app/build.gradle.kts, with mavenCentral() in your repositories
 dependencies {
-    implementation("com.guitarcharts:chord-diagram-compose:0.2.0")
+    implementation("io.github.liamdotpro:chord-diagram-compose:0.3.0")
 }
 ```
 
@@ -92,21 +92,16 @@ fun Greeting() {
 }
 ```
 
+`chord-diagram-core` is the same layout without Android, for servers and other JVM code.
+
 ### React
 
-Not on npm yet. Pack the packages from a checkout, then install the tarballs:
-
 ```sh
-# in guitar-charts
-npm install && npm run build:js
-npm pack -w js/core -w js/react --pack-destination ../packages
-
-# in your app
-npm install ../packages/guitar-charts-core-0.2.0.tgz ../packages/guitar-charts-react-0.2.0.tgz
+npm install @lightsonfire/chord-diagram-react
 ```
 
 ```tsx
-import { ChordCard, ChordLibrary } from "@guitar-charts/react";
+import { ChordCard, ChordLibrary } from "@lightsonfire/chord-diagram-react";
 
 export function Greeting() {
   return <ChordCard chord={ChordLibrary.C} style={{ width: 148 }} />;
@@ -115,14 +110,12 @@ export function Greeting() {
 
 ### React Native
 
-Pack `js/core` and `js/react-native` the same way, and add `react-native-svg`:
-
 ```sh
-npm install ../packages/guitar-charts-core-0.2.0.tgz ../packages/guitar-charts-react-native-0.2.0.tgz react-native-svg
+npm install @lightsonfire/chord-diagram-react-native react-native-svg
 ```
 
 ```tsx
-import { ChordCard, ChordLibrary } from "@guitar-charts/react-native";
+import { ChordCard, ChordLibrary } from "@lightsonfire/chord-diagram-react-native";
 
 export function Greeting() {
   return <ChordCard chord={ChordLibrary.C} style={{ width: 148 }} />;
@@ -419,7 +412,7 @@ The cores have no UI dependency, and a layout is just flat primitives in a 146 �
 <summary>Show code</summary>
 
 ```kotlin
-// chord-diagram-core on the JVM
+// io.github.liamdotpro:chord-diagram-core on the JVM
 File("c-major.svg").writeText(layoutChord(ChordLibrary.C).toSvg(scale = 2.0))
 ```
 
@@ -429,7 +422,7 @@ let svg = ChordLayout(chord: ChordLibrary.c).svg(scale: 2)
 ```
 
 ```ts
-// @guitar-charts/core in Node, no DOM needed
+// @lightsonfire/chord-diagram-core in Node, no DOM needed
 const svg = chordSvg(ChordLibrary.C, undefined, 2);
 ```
 

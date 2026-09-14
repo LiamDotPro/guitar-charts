@@ -548,7 +548,7 @@ function emitDocs() {
 }
 
 // ---------------------------------------------------------------------------
-// JavaScript (@guitar-charts/core, shared by React and React Native)
+// JavaScript (@lightsonfire/chord-diagram-core, shared by React and React Native)
 // ---------------------------------------------------------------------------
 
 const JS_CORE = "js/core/src/generated";

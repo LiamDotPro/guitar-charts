@@ -1,4 +1,4 @@
-export * from "@guitar-charts/core";
+export * from "@lightsonfire/chord-diagram-core";
 export { ChordDiagram, ChordShapes, type ChordDiagramProps, type ChordShapesProps } from "./ChordDiagram.js";
 export { ChordCard, type ChordCardProps } from "./ChordCard.js";
 export { ChordSheet, type ChordSheetProps } from "./ChordSheet.js";

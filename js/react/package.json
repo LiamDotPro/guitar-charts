@@ -1,6 +1,6 @@
 {
-  "name": "@guitar-charts/react",
-  "version": "0.2.0",
+  "name": "@lightsonfire/chord-diagram-react",
+  "version": "0.3.0",
   "description": "Chord diagrams for React on the web: inline SVG, drawn from the shared layout.",
   "license": "MIT",
   "repository": {
@@ -29,7 +29,7 @@
     "prepack": "npm run build && node -e \"require('node:fs').copyFileSync('../../LICENSE', 'LICENSE')\""
   },
   "dependencies": {
-    "@guitar-charts/core": "0.2.0"
+    "@lightsonfire/chord-diagram-core": "0.3.0"
   },
   "peerDependencies": {
     "react": ">=18"

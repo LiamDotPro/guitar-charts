@@ -1,4 +1,4 @@
-import { ChordLibrary, ChordPalette, ChordTokens, type ChordExportFormat, type ChordLibraryEntry } from "@guitar-charts/core";
+import { ChordLibrary, ChordPalette, ChordTokens, type ChordExportFormat, type ChordLibraryEntry } from "@lightsonfire/chord-diagram-core";
 import { useMemo, useState } from "react";
 import { ScrollView, Text, View, useWindowDimensions, type StyleProp, type ViewStyle } from "react-native";
 import { ChordCard } from "./ChordCard.js";

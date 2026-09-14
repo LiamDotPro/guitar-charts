@@ -1,4 +1,4 @@
-import { ChordLibrary, ChordPalette, ChordTokens, type ChordExportFormat, type ChordLibraryEntry } from "@guitar-charts/core";
+import { ChordLibrary, ChordPalette, ChordTokens, type ChordExportFormat, type ChordLibraryEntry } from "@lightsonfire/chord-diagram-core";
 import { useMemo, useState, type CSSProperties, type ReactNode } from "react";
 import { ChordCard } from "./ChordCard.js";
 import { textStyle } from "./style.js";

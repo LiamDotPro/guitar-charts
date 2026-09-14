@@ -1,4 +1,4 @@
-import { ChordTokens } from "@guitar-charts/core";
+import { ChordTokens } from "@lightsonfire/chord-diagram-core";
 import type { TextStyle } from "react-native";
 import type { ChordFonts } from "./fonts.js";
 

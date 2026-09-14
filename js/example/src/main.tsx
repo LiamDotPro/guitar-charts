@@ -1,5 +1,5 @@
-import { ChordFontStacks, ChordSheet as WebChordSheet, ChordTokens, type ChordExportFormat } from "@guitar-charts/react";
-import { ChordSheet as NativeChordSheet, type ChordExportFile } from "@guitar-charts/react-native";
+import { ChordFontStacks, ChordSheet as WebChordSheet, ChordTokens, type ChordExportFormat } from "@lightsonfire/chord-diagram-react";
+import { ChordSheet as NativeChordSheet, type ChordExportFile } from "@lightsonfire/chord-diagram-react-native";
 import { StrictMode, useState, type CSSProperties } from "react";
 import { createRoot } from "react-dom/client";
 

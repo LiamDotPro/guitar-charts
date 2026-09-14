@@ -1,4 +1,4 @@
-import { layoutChord, spokenDescription, type Chord, type ChordLayout, type ChordLayoutOptions } from "@guitar-charts/core";
+import { layoutChord, spokenDescription, type Chord, type ChordLayout, type ChordLayoutOptions } from "@lightsonfire/chord-diagram-core";
 import type { Ref } from "react";
 import { View, type StyleProp, type ViewStyle } from "react-native";
 import { Circle, Line, Rect, Svg, Text } from "react-native-svg";

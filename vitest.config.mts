@@ -4,7 +4,7 @@ import { defineConfig } from "vitest/config";
 
 const path = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 // tests run against source, so nothing has to be built first
-const core = { "@guitar-charts/core": path("js/core/src/index.ts") };
+const core = { "@lightsonfire/chord-diagram-core": path("js/core/src/index.ts") };
 
 export default defineConfig({
   plugins: [react()],

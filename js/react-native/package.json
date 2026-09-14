@@ -1,6 +1,6 @@
 {
-  "name": "@guitar-charts/react-native",
-  "version": "0.2.0",
+  "name": "@lightsonfire/chord-diagram-react-native",
+  "version": "0.3.0",
   "description": "Chord diagrams for React Native, drawn with react-native-svg from the shared layout.",
   "license": "MIT",
   "repository": {
@@ -29,7 +29,7 @@
     "prepack": "npm run build && node -e \"require('node:fs').copyFileSync('../../LICENSE', 'LICENSE')\""
   },
   "dependencies": {
-    "@guitar-charts/core": "0.2.0"
+    "@lightsonfire/chord-diagram-core": "0.3.0"
   },
   "peerDependencies": {
     "react": ">=19",
