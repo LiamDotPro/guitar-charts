@@ -1,0 +1,9 @@
+# LF everywhere, regardless of core.autocrlf. `npm run check` compares
+# generated files byte-for-byte, and gradlew must stay runnable on Unix/WSL.
+* text=auto eol=lf
+
+# cmd.exe mis-parses labels in LF batch files
+*.bat text eol=crlf
+
+*.png binary
+*.jar binary
