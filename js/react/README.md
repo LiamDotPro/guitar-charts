@@ -24,7 +24,8 @@ export function Chords() {
 ```
 
 - **Components:** `ChordDiagram` (the diagram alone), `ChordCard` (with name, caption and export link) and `ChordSheet` (a full demo sheet)
-- **Data:** `frets` run low E to high e, with `-1` muted and `0` open; `fingers`, `barre` and `caption` are optional
+- **Data:** one `frets` entry per string, 2 to 12 of them (so ukulele, bass and 7-string chords work too), with `-1` muted and `0` open; `fingers` (5 is the thumb), `barre`, `caption` and `tuning` are optional
+- **Safe with bad data:** malformed chords never throw or draw off the card; `validateChord` lists what's wrong
 - **Export:** `chordSvg`, `chordPng` and `downloadChord`
 - **Accessible:** each diagram is an image labelled with a spoken description of the shape
 

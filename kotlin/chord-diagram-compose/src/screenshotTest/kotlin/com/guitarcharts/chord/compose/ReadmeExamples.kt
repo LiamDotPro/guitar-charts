@@ -24,6 +24,7 @@ import com.guitarcharts.chord.ChordLayoutOptions
 import com.guitarcharts.chord.ChordLibrary
 import com.guitarcharts.chord.layoutChord
 import com.guitarcharts.chord.toSvg
+import com.guitarcharts.chord.validateChord
 import java.io.File
 
 // Every Kotlin snippet in the root README, compiled and rendered. The body of
@@ -69,6 +70,20 @@ fun ReadmeBarres() = Paper {
 
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         listOf(ChordLibrary.F, a, e).forEach { ChordCard(it, Modifier.weight(1f)) }
+    }
+}
+
+@PreviewTest
+@Preview(name = "Non-standard chords", device = "spec:width=700dp,height=280dp,dpi=320")
+@Composable
+fun ReadmeNonStandard() = Paper {
+    val ukuleleC = Chord(name = "C", frets = listOf(0, 0, 0, 3), fingers = listOf(0, 0, 0, 3), tuning = listOf("G", "C", "E", "A"))
+    val sevenStringEm = Chord(name = "E minor", frets = listOf(0, 0, 2, 2, 0, 0, 0), fingers = listOf(0, 0, 2, 3, 0, 0, 0))
+    val stretch = Chord(name = "Csus2", frets = listOf(-1, 3, 5, 7, 8, -1), fingers = listOf(0, 1, 2, 3, 4, 0))
+    val thumb = Chord(name = "D/F♯", frets = listOf(2, -1, 0, 2, 3, 2), fingers = listOf(5, 0, 0, 1, 3, 2)) // 5 = thumb
+
+    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+        listOf(ukuleleC, sevenStringEm, stretch, thumb).forEach { ChordCard(it, Modifier.weight(1f)) }
     }
 }
 
@@ -149,4 +164,9 @@ private fun ReadmeExport() {
 private fun readmeServer() {
     // chord-diagram-core on the JVM
     File("c-major.svg").writeText(layoutChord(ChordLibrary.C).toSvg(scale = 2.0))
+}
+
+@Suppress("unused")
+private fun readmeValidate(chord: Chord) {
+    validateChord(chord).forEach { println("${it.code} ${it.path}: ${it.message}") }
 }

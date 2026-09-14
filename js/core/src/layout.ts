@@ -1,21 +1,35 @@
 import * as reference from "./generated/reference.js";
 import { ChordTokens } from "./generated/tokens.js";
-import type { Chord, ChordLayout, ChordLayoutOptions } from "./types.js";
+import type { Chord, ChordIssue, ChordLayout, ChordLayoutOptions } from "./types.js";
 
 // The reference is plain JavaScript; this is its typed surface.
 const ref = reference as unknown as {
   layoutChord(chord: Chord, options?: ChordLayoutOptions): ChordLayout;
+  validateChord(chord: unknown): ChordIssue[];
+  describeChord(chord: Chord): string;
   toSvg(layout: ChordLayout, scale?: number): string;
   fretWindow(frets: readonly number[]): number;
-  stringX(index: number): number;
-  stringW(index: number): number;
+  fretRows(frets: readonly number[]): { position: number; rows: number };
+  stringCount(frets: readonly number[]): number;
+  stringX(index: number, strings?: number): number;
+  stringW(index: number, strings?: number): number;
 };
 
 /**
  * Maps a chord to flat drawing primitives in the fixed 146 × 118 design space
- * (y down). Pure, and literally the reference every other platform ports.
+ * (y down). Pure, literally the reference every other platform ports, and never
+ * throws: invalid parts of a chord are left out (see validateChord).
  */
 export const layoutChord = ref.layoutChord;
+
+/**
+ * Problems with a chord; empty when layoutChord draws it exactly as written.
+ * Accepts any value, so it can check untrusted data.
+ */
+export const validateChord = ref.validateChord;
+
+/** English screen-reader label, e.g. "C chord. low E muted, A fret 3 finger 3, …". Same wording on every platform. */
+export const spokenDescription = ref.describeChord;
 
 /**
  * A standalone SVG document, `scale` × 146 × 118 pixels. Text is positioned by
@@ -23,13 +37,19 @@ export const layoutChord = ref.layoutChord;
  */
 export const toSvg = ref.toSvg;
 
-/** First fret of the four-fret window; 1 means the nut is shown. */
+/** First fret of the window; 1 means the nut is shown. */
 export const fretWindow = ref.fretWindow;
 
-/** x of string `index` (0 = low E), in design units. */
+/** First fret of the window and how many fret rows it shows (4 to 12). */
+export const fretRows = ref.fretRows;
+
+/** Strings drawn for these frets: the entry count clamped to 2..12, or 6 below 2. */
+export const stringCount = ref.stringCount;
+
+/** x of string `index` (0 = lowest) on a `strings`-string grid (default 6), in design units. */
 export const stringX = ref.stringX;
 
-/** Thickness of string `index`, in design units. */
+/** Thickness of string `index` on a `strings`-string grid (default 6), in design units. */
 export const stringW = ref.stringW;
 
 /** Every number in the diagram, in design units. */

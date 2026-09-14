@@ -1,6 +1,8 @@
 export type {
   Barre,
   Chord,
+  ChordIssue,
+  ChordIssueCode,
   ChordLayout,
   ChordLayoutCircle,
   ChordLayoutLine,
@@ -8,8 +10,20 @@ export type {
   ChordLayoutRect,
   ChordLayoutText,
 } from "./types.js";
-export { ChordFontStacks, ChordMetrics, ChordPalette, fretWindow, layoutChord, stringW, stringX, toSvg } from "./layout.js";
-export { spokenDescription } from "./describe.js";
+export {
+  ChordFontStacks,
+  ChordMetrics,
+  ChordPalette,
+  fretRows,
+  fretWindow,
+  layoutChord,
+  spokenDescription,
+  stringCount,
+  stringW,
+  stringX,
+  toSvg,
+  validateChord,
+} from "./layout.js";
 export { chordFileName, chordMimeType, chordSvg, type ChordExportFormat } from "./export.js";
 export { ChordLibrary, type ChordId, type ChordLibraryEntry } from "./generated/library.js";
 export { ChordTokens } from "./generated/tokens.js";

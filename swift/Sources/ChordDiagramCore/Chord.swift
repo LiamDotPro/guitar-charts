@@ -1,21 +1,31 @@
-/// A guitar chord shape. Strings run from low E (index 0) to high e (index 5).
+/// A chord shape on any fretted instrument. Strings run from the lowest-pitched (index 0) up.
 public struct Chord: Hashable, Sendable {
     /// Display label, drawn below the diagram.
     public var name: String?
-    /// One value per string: -1 muted, 0 open, n = fret n.
+    /// One value per string, 2 to 12 of them: -1 muted, 0 open, n = fret n (up to 99).
     public var frets: [Int]
-    /// Finger per string; 0 or missing means no number.
+    /// Finger per string: 1 to 4, or 5 for the thumb (drawn "T"). 0 or missing means no number.
     public var fingers: [Int]?
     public var barre: Barre?
     /// Shown under the name. Derived when nil or empty.
     public var caption: String?
+    /// String names, lowest first, for the spoken description. Guitar names are used for 6 strings by default.
+    public var tuning: [String]?
 
-    public init(name: String? = nil, frets: [Int], fingers: [Int]? = nil, barre: Barre? = nil, caption: String? = nil) {
+    public init(
+        name: String? = nil,
+        frets: [Int],
+        fingers: [Int]? = nil,
+        barre: Barre? = nil,
+        caption: String? = nil,
+        tuning: [String]? = nil
+    ) {
         self.name = name
         self.frets = frets
         self.fingers = fingers
         self.barre = barre
         self.caption = caption
+        self.tuning = tuning
     }
 }
 
@@ -24,7 +34,7 @@ public struct Barre: Codable, Hashable, Sendable {
     public var fret: Int
     public var from: Int
     public var to: Int
-    /// Number drawn on the bar. Falls back to `fingers[from]` when nil.
+    /// Number drawn on the bar: 1 to 4, or 5 for the thumb. Falls back to `fingers[from]` when nil.
     public var finger: Int?
 
     public init(fret: Int, from: Int, to: Int, finger: Int? = nil) {
@@ -37,7 +47,7 @@ public struct Barre: Codable, Hashable, Sendable {
 
 extension Chord: Codable {
     private enum CodingKeys: String, CodingKey {
-        case name, frets, fingers, barre, caption
+        case name, frets, fingers, barre, caption, tuning
     }
 
     public init(from decoder: Decoder) throws {
@@ -47,6 +57,7 @@ extension Chord: Codable {
         fingers = try c.decodeIfPresent([Int].self, forKey: .fingers)
         barre = try c.decodeIfPresent(Barre.self, forKey: .barre)
         caption = try c.decodeIfPresent(String.self, forKey: .caption)
+        tuning = try c.decodeIfPresent([String].self, forKey: .tuning)
     }
 }
 
