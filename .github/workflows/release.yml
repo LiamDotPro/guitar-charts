@@ -1,0 +1,87 @@
+name: Release
+
+# Push a version tag (e.g. 0.3.0) to publish the JS packages to npm and the Kotlin
+# libraries to Maven Central. Swift Package Manager installs straight from the tag.
+# Versions that are already published are skipped, so re-running is safe.
+on:
+  push:
+    tags: ["[0-9]+.[0-9]+.[0-9]+"]
+
+permissions:
+  contents: read
+
+jobs:
+  versions:
+    name: Tag matches declared versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Compare
+        run: |
+          tag="$GITHUB_REF_NAME"
+          status=0
+          for pkg in js/core js/react js/react-native; do
+            version=$(node -p "require('./$pkg/package.json').version")
+            [ "$version" = "$tag" ] || { echo "::error::$pkg/package.json is $version, tag is $tag"; status=1; }
+          done
+          version=$(grep '^version=' kotlin/gradle.properties | cut -d= -f2)
+          [ "$version" = "$tag" ] || { echo "::error::kotlin/gradle.properties is $version, tag is $tag"; status=1; }
+          exit $status
+
+  npm:
+    name: npm
+    needs: versions
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing; no token is stored
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run check
+      - run: npm run test:js
+      - name: Publish
+        # core first, so the others build against it (each package's prepack builds it)
+        run: |
+          for pkg in js/core js/react js/react-native; do
+            name=$(node -p "require('./$pkg/package.json').name")
+            version=$(node -p "require('./$pkg/package.json').version")
+            if npm view "$name@$version" version > /dev/null 2>&1; then
+              echo "$name@$version is already on npm, skipping"
+            else
+              npm publish -w "$pkg"
+            fi
+          done
+
+  maven-central:
+    name: Maven Central
+    needs: versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Already published?
+        id: published
+        run: |
+          group=$(grep '^group=' kotlin/gradle.properties | cut -d= -f2 | tr . /)
+          url="https://repo1.maven.org/maven2/$group/chord-diagram-core/$GITHUB_REF_NAME/"
+          if curl -sfI "$url" > /dev/null; then echo "skip=true" >> "$GITHUB_OUTPUT"; echo "$url exists, skipping"; fi
+      - uses: actions/setup-java@v6
+        if: steps.published.outputs.skip != 'true'
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+        if: steps.published.outputs.skip != 'true'
+      - name: Publish and release
+        if: steps.published.outputs.skip != 'true'
+        working-directory: kotlin
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache

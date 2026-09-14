@@ -13,7 +13,7 @@
     "check": "node shared/scripts/generate.mjs --check",
     "build:js": "npm run build -w js/core && npm run build -w js/react -w js/react-native",
     "test:js": "vitest run",
-    "typecheck:js": "tsc -p js/react/tsconfig.readme.json && tsc -p js/react-native/tsconfig.readme.json",
+    "typecheck:js": "npm run build -w js/core && tsc -p js/react/tsconfig.readme.json && tsc -p js/react-native/tsconfig.readme.json",
     "example": "npm run dev -w js/example"
   },
   "devDependencies": {

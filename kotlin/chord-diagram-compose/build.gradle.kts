@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.android.compose.screenshot)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 android {
@@ -23,19 +23,16 @@ android {
     }
 
     experimentalProperties["android.experimental.enableScreenshotTest"] = true
-
-    publishing {
-        singleVariant("release") {
-            withSourcesJar()
-        }
-    }
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            afterEvaluate { from(components["release"]) }
-        }
+// Publishes the release variant with sources. Shared POM fields come from ../gradle.properties.
+mavenPublishing {
+    publishToMavenCentral()
+    // Maven Central needs signatures; publishToMavenLocal works without a key
+    if (providers.gradleProperty("signingInMemoryKey").isPresent) signAllPublications()
+    pom {
+        name.set("Chord Diagram for Jetpack Compose")
+        description.set("Guitar chord diagrams for Jetpack Compose: ChordDiagram, ChordCard, ChordSheet and SVG/PNG export.")
     }
 }
 

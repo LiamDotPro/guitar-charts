@@ -2,20 +2,22 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.jvm)
-    `maven-publish`
+    alias(libs.plugins.maven.publish)
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-    withSourcesJar()
 }
 
-publishing {
-    publications {
-        register<MavenPublication>("maven") {
-            from(components["java"])
-        }
+// Shared POM fields (url, license, scm, developer) come from ../gradle.properties.
+mavenPublishing {
+    publishToMavenCentral()
+    // Maven Central needs signatures; publishToMavenLocal works without a key
+    if (providers.gradleProperty("signingInMemoryKey").isPresent) signAllPublications()
+    pom {
+        name.set("Chord Diagram Core")
+        description.set("Guitar chord diagram layout for the JVM: a chord shape in, drawing primitives and SVG out. No Android dependency.")
     }
 }
 

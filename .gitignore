@@ -19,6 +19,8 @@ captures/
 
 # JavaScript
 dist/
+# copied from the root by each package's prepack script
+js/*/LICENSE
 
 # IDE
 .idea/workspace.xml
