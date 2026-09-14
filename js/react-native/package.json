@@ -1,0 +1,41 @@
+{
+  "name": "@guitar-charts/react-native",
+  "version": "0.1.0",
+  "description": "Chord diagrams for React Native, drawn with react-native-svg from the shared layout.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LiamDotPro/guitar-charts.git",
+    "directory": "js/react-native"
+  },
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@guitar-charts/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-native": ">=0.78",
+    "react-native-svg": ">=15"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "react": "^19.3.0",
+    "react-native": "^0.87.1",
+    "react-native-svg": "^15.15.5"
+  }
+}

@@ -1,12 +1,28 @@
 {
   "name": "guitar-charts",
   "private": true,
-  "description": "Chord diagram component — shared layout spec with Swift, Kotlin and React Native ports",
+  "description": "Chord diagram component — shared layout spec with Swift, Kotlin, React and React Native ports",
+  "workspaces": [
+    "js/core",
+    "js/react",
+    "js/react-native",
+    "js/example"
+  ],
   "scripts": {
     "generate": "node shared/scripts/generate.mjs",
-    "check": "node shared/scripts/generate.mjs --check"
+    "check": "node shared/scripts/generate.mjs --check",
+    "build:js": "npm run build -w js/core && npm run build -w js/react -w js/react-native",
+    "test:js": "vitest run",
+    "typecheck:js": "tsc -p js/react/tsconfig.readme.json && tsc -p js/react-native/tsconfig.readme.json",
+    "example": "npm run dev -w js/example"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
+    "react-dom": "^19.3.0",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20.19"
   }
 }

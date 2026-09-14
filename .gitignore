@@ -17,5 +17,8 @@ local.properties
 *.apk
 captures/
 
+# JavaScript
+dist/
+
 # IDE
 .idea/workspace.xml
