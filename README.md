@@ -56,7 +56,7 @@ Shapes above the 4th fret slide the four-fret window down the neck and label it 
 
 ```swift
 // Package.swift
-.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.1.0")
+.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.2.0")
 // target dependency: .product(name: "ChordDiagram", package: "guitar-charts")
 ```
 
@@ -81,7 +81,7 @@ includeBuild("../guitar-charts/kotlin")
 
 // app/build.gradle.kts
 dependencies {
-    implementation("com.guitarcharts:chord-diagram-compose:0.1.0")
+    implementation("com.guitarcharts:chord-diagram-compose:0.2.0")
 }
 ```
 
@@ -102,7 +102,7 @@ npm install && npm run build:js
 npm pack -w js/core -w js/react --pack-destination ../packages
 
 # in your app
-npm install ../packages/guitar-charts-core-0.1.0.tgz ../packages/guitar-charts-react-0.1.0.tgz
+npm install ../packages/guitar-charts-core-0.2.0.tgz ../packages/guitar-charts-react-0.2.0.tgz
 ```
 
 ```tsx
@@ -118,7 +118,7 @@ export function Greeting() {
 Pack `js/core` and `js/react-native` the same way, and add `react-native-svg`:
 
 ```sh
-npm install ../packages/guitar-charts-core-0.1.0.tgz ../packages/guitar-charts-react-native-0.1.0.tgz react-native-svg
+npm install ../packages/guitar-charts-core-0.2.0.tgz ../packages/guitar-charts-react-native-0.2.0.tgz react-native-svg
 ```
 
 ```tsx
