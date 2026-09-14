@@ -1,0 +1,46 @@
+name: Check signing key
+
+# Run by hand (Actions → Check signing key → Run workflow) after setting or rotating
+# SIGNING_KEY / SIGNING_KEY_PASSWORD. It signs a test file with the stored key and
+# verifies the signature against the public key on keyserver.ubuntu.com, the way
+# Maven Central validates a deployment. Only fingerprints are printed.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stored key signs, published key verifies
+        env:
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
+        run: |
+          set -euo pipefail
+          work=$(mktemp -d)
+          cd "$work"
+
+          fpr=$(printf '%s\n' "$SIGNING_KEY" | gpg --show-keys --with-colons 2>/dev/null | awk -F: '$1=="fpr"{print $10; exit}')
+          if [ -z "$fpr" ]; then echo "::error::SIGNING_KEY does not contain a readable OpenPGP key"; exit 1; fi
+          echo "Key in SIGNING_KEY: $fpr"
+
+          export GNUPGHOME="$work/signer"; mkdir -m 700 "$GNUPGHOME"
+          printf '%s\n' "$SIGNING_KEY" | gpg --batch --pinentry-mode loopback --passphrase "$SIGNING_KEY_PASSWORD" --import > /dev/null 2>&1
+          echo "test" > test.txt
+          if ! gpg --batch --pinentry-mode loopback --passphrase "$SIGNING_KEY_PASSWORD" --local-user "$fpr" --armor --detach-sign test.txt 2> sign.log; then
+            echo "::error::Signing failed; SIGNING_KEY_PASSWORD may not match the key"; exit 1
+          fi
+          echo "Signature issuer: $(gpg --list-packets test.txt.asc 2>/dev/null | grep -oE 'keyid [0-9A-F]+' | head -n 1)"
+
+          export GNUPGHOME="$work/verifier"; mkdir -m 700 "$GNUPGHOME"
+          if ! gpg --batch --keyserver hkps://keyserver.ubuntu.com --recv-keys "$fpr" > /dev/null 2>&1; then
+            echo "::error::Key $fpr is not on keyserver.ubuntu.com"; exit 1
+          fi
+          if gpg --batch --verify test.txt.asc test.txt > /dev/null 2>&1; then
+            echo "OK: the stored key signs, and keyserver.ubuntu.com's copy of $fpr verifies the signature"
+          else
+            echo "::error::The signature does not verify with the key published on keyserver.ubuntu.com"; exit 1
+          fi
