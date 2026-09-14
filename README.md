@@ -55,7 +55,7 @@ Shapes above the 4th fret slide the four-fret window down the neck and label it 
 
 ```swift
 // Package.swift
-.package(url: "https://github.com/LiamDotPro/guitar-charts.git", branch: "main")
+.package(url: "https://github.com/LiamDotPro/guitar-charts.git", from: "0.1.0")
 // target dependency: .product(name: "ChordDiagram", package: "guitar-charts")
 ```
 
