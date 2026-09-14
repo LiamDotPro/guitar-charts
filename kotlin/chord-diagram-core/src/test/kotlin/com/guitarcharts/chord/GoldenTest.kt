@@ -11,14 +11,15 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.io.File
 import kotlin.math.abs
+import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
 /**
- * Conformance against shared/fixtures/golden.json, which is produced by running
- * the reference JS. Regenerate with `npm run generate`.
+ * Conformance against shared/fixtures/golden.json and fuzz.json, which are produced
+ * by running the reference JS. Regenerate with `npm run generate`.
  */
 class GoldenTest {
     private data class Case(
@@ -27,11 +28,27 @@ class GoldenTest {
         val options: ChordLayoutOptions,
         val layout: ChordLayout,
         val svg: String,
+        val description: String,
+        val issues: List<Pair<String, String>>,
     )
 
+    private data class FuzzCase(
+        val chord: Chord,
+        val options: ChordLayoutOptions,
+        val position: Int,
+        val rows: Int,
+        val strings: Int,
+        val svgHash: String,
+        val description: String,
+        val issues: List<Pair<String, String>>,
+    )
+
+    private val goldenFile: File by lazy {
+        File(System.getProperty("chordDiagram.golden") ?: error("chordDiagram.golden system property not set"))
+    }
+
     private val cases: List<Case> by lazy {
-        val path = System.getProperty("chordDiagram.golden") ?: error("chordDiagram.golden system property not set")
-        Json.parseToJsonElement(File(path).readText()).jsonObject.getValue("cases").jsonArray.map { element ->
+        Json.parseToJsonElement(goldenFile.readText()).jsonObject.getValue("cases").jsonArray.map { element ->
             val o = element.jsonObject
             Case(
                 id = o.string("id")!!,
@@ -39,6 +56,24 @@ class GoldenTest {
                 options = o.getValue("options").jsonObject.toOptions(),
                 layout = o.getValue("layout").jsonObject.toLayout(),
                 svg = o.string("svg")!!,
+                description = o.string("description")!!,
+                issues = o.getValue("issues").toIssues(),
+            )
+        }
+    }
+
+    private val fuzzCases: List<FuzzCase> by lazy {
+        Json.parseToJsonElement(goldenFile.resolveSibling("fuzz.json").readText()).jsonObject.getValue("cases").jsonArray.map { element ->
+            val o = element.jsonObject
+            FuzzCase(
+                chord = o.getValue("chord").jsonObject.toChord(),
+                options = o.getValue("options").jsonObject.toOptions(),
+                position = o.getValue("position").jsonPrimitive.int,
+                rows = o.getValue("rows").jsonPrimitive.int,
+                strings = o.getValue("strings").jsonPrimitive.int,
+                svgHash = o.string("svgFnv1a64")!!,
+                description = o.string("description")!!,
+                issues = o.getValue("issues").toIssues(),
             )
         }
     }
@@ -50,6 +85,8 @@ class GoldenTest {
             val actual = layoutChord(c.chord, c.options)
             val expected = c.layout
             assertEquals(expected.position, actual.position, c.id)
+            assertEquals(expected.rows, actual.rows, c.id)
+            assertEquals(expected.strings, actual.strings, c.id)
             assertEquals(expected.name, actual.name, c.id)
             assertEquals(expected.caption, actual.caption, c.id)
             assertEquals(expected.width, actual.width, c.id)
@@ -65,6 +102,53 @@ class GoldenTest {
     fun svgMatchesReferenceExactly() {
         for (c in cases) {
             assertEquals(c.svg, layoutChord(c.chord, c.options).toSvg(), c.id)
+        }
+    }
+
+    @Test
+    fun descriptionsAndIssuesMatchReference() {
+        for (c in cases) {
+            assertEquals(c.description, c.chord.spokenDescription(), c.id)
+            assertEquals(c.issues, validateChord(c.chord).map { it.code to it.path }, c.id)
+            assertEquals(c.id.startsWith("invalid/"), c.issues.isNotEmpty(), "${c.id}: only invalid cases have issues")
+        }
+    }
+
+    @Test
+    fun fuzzMatchesReference() {
+        assertTrue(fuzzCases.size >= 400)
+        fuzzCases.forEachIndexed { i, c ->
+            val layout = layoutChord(c.chord, c.options)
+            val where = "fuzz[$i] ${c.chord} ${c.options}"
+            assertEquals(Triple(c.position, c.rows, c.strings), Triple(layout.position, layout.rows, layout.strings), where)
+            assertEquals(c.svgHash, fnv1a64(layout.toSvg()), "$where\n${layout.toSvg()}")
+            assertEquals(c.description, c.chord.spokenDescription(), where)
+            assertEquals(c.issues, validateChord(c.chord).map { it.code to it.path }, where)
+        }
+    }
+
+    /** Extreme values the JSON fixtures can't carry: nothing may throw, overflow or leave the canvas. */
+    @Test
+    fun neverThrowsAndStaysInsideTheCanvas() {
+        val random = Random(20260914)
+        val extremes = listOf(Int.MIN_VALUE, -2, -1, 0, 1, 99, 100, Int.MAX_VALUE)
+        fun value(lo: Int, hi: Int) = if (random.nextInt(6) == 0) extremes.random(random) else random.nextInt(lo, hi + 1)
+        repeat(3000) { n ->
+            val chord = Chord(
+                name = if (random.nextBoolean()) "Chord $n" else null,
+                frets = List(random.nextInt(0, 16)) { value(-1, 30) },
+                fingers = if (random.nextBoolean()) List(random.nextInt(0, 16)) { value(-1, 7) } else null,
+                barre = if (random.nextInt(3) == 0) Barre(value(-1, 30), value(-2, 14), value(-2, 14), if (random.nextBoolean()) value(-1, 9) else null) else null,
+                caption = if (random.nextInt(5) == 0) "" else null,
+                tuning = if (random.nextInt(6) == 0) List(random.nextInt(0, 16)) { if (random.nextInt(10) == 0) "" else "S$it" } else null,
+            )
+            val layout = layoutChord(chord, ChordLayoutOptions(showFingers = random.nextBoolean()))
+            val problems = layoutProblems(layout)
+            val svg = layout.toSvg()
+            if ("NaN" in svg || "undefined" in svg || "Infinity" in svg) problems += "svg has NaN, undefined or Infinity"
+            if (problems.isNotEmpty()) fail("#$n $chord: $problems")
+            validateChord(chord)
+            chord.spokenDescription()
         }
     }
 
@@ -88,7 +172,16 @@ class GoldenTest {
         assertEquals(1, ChordLayout.fretWindow(listOf(-1, 3, 2, 0, 1, 0)))
         assertEquals(1, ChordLayout.fretWindow(listOf(-1, -1, 4, 4, 4, 4)))
         assertEquals(5, ChordLayout.fretWindow(listOf(5, 7, 7, 6, 5, 5)))
-        assertEquals(6, ChordLayout.fretWindow(listOf(-1, 5, 7, 7, 7, 9)))
+        assertEquals(ChordLayout.FretWindow(5, 5), ChordLayout.fretRows(listOf(-1, 5, 7, 7, 7, 9)))
+        assertEquals(ChordLayout.FretWindow(12, 6), ChordLayout.fretRows(listOf(-1, 12, 14, 16, 17, -1)))
+        assertEquals(ChordLayout.FretWindow(13, 12), ChordLayout.fretRows(listOf(1, 5, 9, 13, 17, 24)))
+        assertEquals(ChordLayout.FretWindow(1, 4), ChordLayout.fretRows(listOf(100, 3, -5)))
+    }
+
+    @Test
+    fun stringCount() {
+        val counts = listOf(emptyList(), listOf(3), listOf(0, 0), List(13) { 0 }).map { ChordLayout.stringCount(it) }
+        assertEquals(listOf(6, 6, 2, 12), counts)
     }
 
     @Test
@@ -102,7 +195,37 @@ class GoldenTest {
         assertEquals("12345678.5", jsNumber(12345678.5))
     }
 
-    // region approximate comparison
+    // region helpers
+
+    private fun layoutProblems(layout: ChordLayout): MutableList<String> {
+        val problems = mutableListOf<String>()
+        val eps = 1e-9
+        fun box(what: String, x0: Double, y0: Double, x1: Double, y1: Double) {
+            if (listOf(x0, y0, x1, y1).any { !it.isFinite() }) {
+                problems += "$what: non-finite"
+            } else if (x0 < -eps || y0 < -eps || x1 > layout.width + eps || y1 > layout.height + eps) {
+                problems += "$what: outside the canvas"
+            }
+        }
+        for (r in layout.rects) {
+            if (!(r.w > 0 && r.h > 0)) problems += "rect ${r.id}: empty size"
+            box("rect ${r.id}", r.x, r.y, r.x + r.w, r.y + r.h)
+        }
+        for (c in layout.circles) box("circle ${c.id}", c.cx - c.r, c.cy - c.r, c.cx + c.r, c.cy + c.r)
+        for (l in layout.lines) box("line", minOf(l.x1, l.x2), minOf(l.y1, l.y2), maxOf(l.x1, l.x2), maxOf(l.y1, l.y2))
+        for (t in layout.texts) box("text ${t.text}", t.x, t.y - t.size / 2, t.x, t.y + t.size / 2)
+        return problems
+    }
+
+    /** FNV-1a 64 over UTF-8, as recorded in fuzz.json. */
+    private fun fnv1a64(text: String): String {
+        var hash = 0xcbf29ce484222325uL
+        for (byte in text.encodeToByteArray()) {
+            hash = hash xor byte.toUByte().toULong()
+            hash *= 0x100000001b3uL
+        }
+        return hash.toString(16).padStart(16, '0')
+    }
 
     private fun <T> assertNear(actual: List<T>, expected: List<T>, id: String, kind: String, near: (T, T) -> Boolean) {
         if (actual.size != expected.size || !actual.zip(expected).all { (a, e) -> near(a, e) }) {
@@ -131,7 +254,7 @@ class GoldenTest {
 
     // endregion
 
-    // region golden.json decoding
+    // region fixture decoding
 
     private fun JsonObject.string(key: String): String? = this[key]?.jsonPrimitive?.content
 
@@ -146,6 +269,9 @@ class GoldenTest {
 
     private fun JsonElement.objects(): List<JsonObject> = jsonArray.map { it.jsonObject }
 
+    private fun JsonElement.toIssues(): List<Pair<String, String>> =
+        objects().map { it.string("code")!! to it.string("path")!! }
+
     private fun JsonObject.toChord() = Chord(
         name = string("name"),
         frets = ints("frets").orEmpty(),
@@ -154,6 +280,7 @@ class GoldenTest {
             Barre(b.getValue("fret").jsonPrimitive.int, b.getValue("from").jsonPrimitive.int, b.getValue("to").jsonPrimitive.int, b["finger"]?.jsonPrimitive?.int)
         },
         caption = string("caption"),
+        tuning = this["tuning"]?.jsonArray?.map { it.jsonPrimitive.content },
     )
 
     private fun JsonObject.toOptions() = ChordLayoutOptions(
@@ -169,6 +296,8 @@ class GoldenTest {
         width = dbl("width"),
         height = dbl("height"),
         position = getValue("position").jsonPrimitive.int,
+        rows = getValue("rows").jsonPrimitive.int,
+        strings = getValue("strings").jsonPrimitive.int,
         name = string("name")!!,
         caption = string("caption")!!,
         rects = getValue("rects").objects().map {

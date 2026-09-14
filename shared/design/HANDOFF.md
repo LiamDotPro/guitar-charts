@@ -43,15 +43,19 @@ string to sub-pixel accuracy and nothing overflows the canvas.
 }
 ```
 
-- `frets.length` is 6; index 0 is the low E string (leftmost).
+- `frets.length` is the string count, 2 to 12 (6 on a guitar); index 0 is the
+  lowest-pitched string (leftmost). Fewer than 2 entries draw the 6-string grid.
+- `fingers` are 1–4, or 5 for the thumb (drawn "T"). The optional `tuning` names
+  the strings for the spoken description.
 - `barre.from`/`barre.to` are **string indices**, not frets. A dot is suppressed
   for any string the barre covers at the same fret; the barre carries one number.
 - `caption` defaults to `"barre"` if a barre is present, else `"N open"` if any
   open strings, else `"closed"`.
-- Fret window: 1st position whenever the highest note is ≤ fret 4. Otherwise
-  start at the lowest fretted note if the shape fits in 4 rows, else clamp so the
-  highest note lands on the last row. When the window does not start at 1 the nut
-  is drawn as a thin fret line and an `Nfr` marker appears in the left gutter.
+- Fret window: 4 rows from the nut whenever the highest note is ≤ fret 4.
+  Otherwise start at the lowest fretted note, with one row per fret the shape
+  spans (at least 4, at most 12); wider shapes keep their highest 12 frets. When
+  the window does not start at 1 the nut is drawn as a thin fret line and an
+  `Nfr` marker appears in the left gutter.
 
 ## Canvas & geometry
 
@@ -85,6 +89,21 @@ Two details that are easy to get wrong and were bugs during design:
 2. **Text is positioned by its centre, not its baseline.** `texts[].y` is the
    centre; for a baseline-drawing API use `y + size × 0.35`. Centring by line box
    caused finger numbers to drift out of the barre bar.
+
+## Beyond the original handoff
+
+Added later. A 6-string chord that fits in 4 frets renders exactly as above.
+
+- **Any string count.** The outer strings stay at x 32 and 122:
+  `x(i) = 32 + 90i / (n − 1)`. Thickness tapers from 1.15 to 0.70 across all `n`.
+- **More rows.** The grid keeps its 80 height, so a row is `80 / rows` tall.
+- **Crowded grids.** Dots, the barre bar and finger numbers scale by
+  `min(1, stringSpacing / 18, rowHeight / 20)`. Open rings and mute crosses
+  scale by `min(1, stringSpacing / 12)`.
+- **Malformed input never throws.** Frets that aren't integers from -1 to 99 and
+  fingers that aren't 0–5 draw nothing. A barre is put in order, clamped to the
+  strings, and dropped if it covers no string at its fret or falls outside the
+  window. `validateChord()` lists each such problem with a stable `code` and `path`.
 
 ## Design tokens
 

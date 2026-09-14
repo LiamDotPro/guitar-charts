@@ -1,5 +1,5 @@
 {
-  "$comment": "Extra conformance inputs on top of the chord library. Each case is run through shared/reference/chord-layout.js to produce golden.json; every platform port must reproduce it.",
+  "$comment": "Extra conformance inputs on top of the chord library. Each case is run through shared/reference/chord-layout.js to produce golden.json; every platform port must reproduce it. Entries in `cases` must pass validateChord(); entries in `invalidCases` must each have at least one issue (golden.json records which) and use only integers and strings, so every port can decode them.",
   "cases": [
     { "id": "all-open", "chord": { "name": "Open", "frets": [0, 0, 0, 0, 0, 0] } },
     { "id": "all-muted", "chord": { "name": "Muted", "frets": [-1, -1, -1, -1, -1, -1] } },
@@ -15,6 +15,47 @@
     { "id": "partial-barre", "chord": { "name": "F small", "frets": [-1, -1, 3, 2, 1, 1], "fingers": [0, 0, 3, 2, 1, 1], "barre": { "fret": 1, "from": 4, "to": 5, "finger": 1 } } },
     { "id": "hide-fingers", "chord": { "name": "F", "frets": [1, 3, 3, 2, 1, 1], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 1, "from": 0, "to": 5, "finger": 1 } }, "options": { "showFingers": false } },
     { "id": "accent-blue", "chord": { "name": "B♭", "frets": [-1, 1, 3, 3, 3, 1], "fingers": [0, 1, 2, 3, 4, 1], "barre": { "fret": 1, "from": 1, "to": 5, "finger": 1 } }, "options": { "accent": "#2266a4" } },
-    { "id": "all-colors", "chord": { "name": "G", "frets": [3, 5, 5, 4, 3, 3], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 3, "from": 0, "to": 5, "finger": 1 } }, "options": { "accent": "#267b4c", "ink": "#000000", "line": "#999999", "paper": "#ffffff", "muted": "#555555" } }
+    { "id": "all-colors", "chord": { "name": "G", "frets": [3, 5, 5, 4, 3, 3], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 3, "from": 0, "to": 5, "finger": 1 } }, "options": { "accent": "#267b4c", "ink": "#000000", "line": "#999999", "paper": "#ffffff", "muted": "#555555" } },
+
+    { "id": "stretch-from-nut", "chord": { "name": "Wide", "frets": [1, -1, 3, 5, 6, -1], "fingers": [1, 0, 2, 3, 4, 0] } },
+    { "id": "stretch-6", "chord": { "name": "Csus2", "frets": [-1, 3, 5, 7, 8, -1], "fingers": [0, 1, 2, 3, 4, 0] } },
+    { "id": "stretch-high", "chord": { "name": "High stretch", "frets": [-1, 12, 14, 16, 17, -1], "fingers": [0, 1, 2, 3, 4, 0] } },
+    { "id": "stretch-12", "chord": { "name": "Two octaves", "frets": [1, -1, -1, -1, -1, 12], "fingers": [1, 0, 0, 0, 0, 4] } },
+    { "id": "stretch-with-barre", "chord": { "name": "Wide barre", "frets": [1, 1, 3, 5, 6, 1], "fingers": [1, 1, 2, 3, 4, 1], "barre": { "fret": 1, "from": 0, "to": 5, "finger": 1 } } },
+    { "id": "stretch-hide-fingers", "chord": { "name": "Wide", "frets": [1, -1, 3, 5, 6, -1], "fingers": [1, 0, 2, 3, 4, 0] }, "options": { "showFingers": false } },
+    { "id": "fret-99", "chord": { "name": "Top", "frets": [96, 99, -1, -1, -1, -1] } },
+    { "id": "two-strings", "chord": { "name": "Dyad", "frets": [5, 7], "fingers": [1, 3] } },
+    { "id": "ukulele-c", "chord": { "name": "C", "frets": [0, 0, 0, 3], "fingers": [0, 0, 0, 3], "tuning": ["G", "C", "E", "A"] } },
+    { "id": "bass-5-string", "chord": { "name": "E", "frets": [-1, 0, 2, 2, 1], "fingers": [0, 0, 2, 3, 1] } },
+    { "id": "banjo-g", "chord": { "name": "G", "frets": [0, 0, 0, 0, 0], "tuning": ["g", "D", "G", "B", "D"] } },
+    { "id": "seven-string-em", "chord": { "name": "E minor", "frets": [0, 0, 2, 2, 0, 0, 0], "fingers": [0, 0, 2, 3, 0, 0, 0], "tuning": ["B", "E", "A", "D", "G", "B", "E"] } },
+    { "id": "eight-string-barre", "chord": { "name": "F♯ minor", "frets": [2, 2, 4, 4, 2, 2, 2, 2], "fingers": [1, 1, 3, 4, 1, 1, 1, 1], "barre": { "fret": 2, "from": 0, "to": 7, "finger": 1 } } },
+    { "id": "twelve-strings", "chord": { "name": "Harp", "frets": [0, 1, 2, 3, 4, 3, 2, 1, 0, -1, 1, 2] } },
+    { "id": "thumb", "chord": { "name": "D/F♯", "frets": [2, -1, 0, 2, 3, 2], "fingers": [5, 0, 0, 1, 3, 2] } },
+    { "id": "thumb-barre", "chord": { "name": "Thumb barre", "frets": [3, 3, 3, -1, -1, -1], "barre": { "fret": 3, "from": 0, "to": 2, "finger": 5 } } },
+    { "id": "barre-high-strings", "chord": { "name": "A", "frets": [-1, 0, 2, 2, 2, 0], "fingers": [0, 0, 1, 1, 1, 0], "barre": { "fret": 2, "from": 2, "to": 4, "finger": 1 } } },
+    { "id": "barre-under-notes", "chord": { "name": "Cmaj7", "frets": [-1, 3, 5, 4, 5, 3], "fingers": [0, 1, 3, 2, 4, 1], "barre": { "fret": 3, "from": 1, "to": 5, "finger": 1 } } }
+  ],
+  "invalidCases": [
+    { "id": "no-strings", "chord": { "name": "Empty", "frets": [] } },
+    { "id": "one-string", "chord": { "name": "One", "frets": [3], "fingers": [1] } },
+    { "id": "thirteen-strings", "chord": { "frets": [0, 1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1, 0] } },
+    { "id": "fret-below-muted", "chord": { "frets": [-2, 3, 2, 0, 1, 0] } },
+    { "id": "fret-above-99", "chord": { "frets": [100, 3, 2, 0, 1, 0] } },
+    { "id": "span-13", "chord": { "frets": [1, -1, -1, -1, -1, 13], "fingers": [1, 0, 0, 0, 0, 4] } },
+    { "id": "span-24", "chord": { "frets": [1, 5, 9, 13, 17, 24] } },
+    { "id": "fingers-short", "chord": { "frets": [-1, 3, 2, 0, 1, 0], "fingers": [0, 3] } },
+    { "id": "fingers-long", "chord": { "frets": [-1, 3, 2, 0, 1, 0], "fingers": [0, 3, 2, 0, 1, 0, 4] } },
+    { "id": "finger-out-of-range", "chord": { "frets": [3, 2, 0, 0, 0, 3], "fingers": [7, -1, 0, 0, 0, 4] } },
+    { "id": "barre-past-last-string", "chord": { "frets": [1, 1, 1, 1, 1, 1], "barre": { "fret": 1, "from": 0, "to": 9, "finger": 1 } } },
+    { "id": "barre-reversed", "chord": { "frets": [-1, 1, 3, 3, 3, 1], "barre": { "fret": 1, "from": 5, "to": 1, "finger": 1 } } },
+    { "id": "barre-negative-from", "chord": { "frets": [3, 3, 3, 3, 3, 3], "barre": { "fret": 3, "from": -2, "to": 2 } } },
+    { "id": "barre-covers-nothing", "chord": { "frets": [3, 3, 3, 3, 3, 3], "barre": { "fret": 2, "from": 0, "to": 5, "finger": 1 } } },
+    { "id": "barre-fret-zero", "chord": { "frets": [0, 0, 0, 0, 0, 0], "barre": { "fret": 0, "from": 0, "to": 5 } } },
+    { "id": "barre-finger-out-of-range", "chord": { "frets": [1, 3, 3, 2, 1, 1], "fingers": [1, 3, 4, 2, 1, 1], "barre": { "fret": 1, "from": 0, "to": 5, "finger": 9 } } },
+    { "id": "barre-outside-window", "chord": { "frets": [1, -1, -1, -1, -1, 20], "barre": { "fret": 1, "from": 0, "to": 0, "finger": 1 } } },
+    { "id": "tuning-wrong-length", "chord": { "frets": [0, 0, 0, 3], "tuning": ["G", "C", "E"] } },
+    { "id": "tuning-empty-name", "chord": { "frets": [0, 0, 0, 3], "tuning": ["G", "", "E", "A"] } },
+    { "id": "everything-wrong", "chord": { "name": "Chaos", "frets": [-5, 200, 3, 4, 20, 2, 1, 1, 1, 1, 1, 1, 1], "fingers": [9, 1], "barre": { "fret": 50, "from": 8, "to": -3, "finger": -2 }, "tuning": ["x"] } }
   ]
 }

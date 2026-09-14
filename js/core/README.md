@@ -24,6 +24,8 @@ const { rects, lines, circles, texts, position } = layoutChord({
 });
 ```
 
+Any fretted instrument works: `frets` can have 2 to 12 entries, shapes wider than four frets get a row per fret, and finger `5` is the thumb. Malformed chords never throw; `validateChord` lists what's wrong.
+
 Also included: the chord library, the design tokens, `spokenDescription` for accessible labels, and `chordFileName`.
 
 For ready-made components, use `@lightsonfire/chord-diagram-react` or `@lightsonfire/chord-diagram-react-native`, which re-export everything here. See the [full README](https://github.com/LiamDotPro/guitar-charts#readme).

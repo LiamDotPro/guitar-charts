@@ -7,23 +7,23 @@ public enum ChordMetrics {
     public static let width: Double = 146
     /// canvas height
     public static let height: Double = 118
-    /// x of string 1 (low E); 0..32 is the gutter the "Nfr" marker lives in
+    /// x of the lowest string; 0..32 is the gutter the "Nfr" marker lives in
     public static let left: Double = 32
-    /// string-to-string distance -> box is 5 * 18 = 90 wide
+    /// string spacing on a 6-string grid; the outer strings are always 5 * 18 = 90 apart
     public static let spacing: Double = 18
     /// y of the playable area's top edge (bottom edge of the nut)
     public static let nutY: Double = 34
-    /// fret-row height
+    /// fret-row height with 4 rows; more rows share the same 80
     public static let gap: Double = 20
-    /// fret rows shown at once
+    /// fewest fret rows shown
     public static let span: Int = 4
     /// fret-line thickness
     public static let lineW: Double = 1.2
     /// nut thickness (1st position only)
     public static let nutW: Double = 3.6
-    /// low-E thickness
+    /// lowest string's thickness
     public static let stringW0: Double = 1.15
-    /// thinner per string toward high e
+    /// thinner per string toward the highest on a 6-string grid (0.70 at the top)
     public static let stringTaper: Double = 0.09
     /// fretted-note dot radius
     public static let dotR: Double = 6.3
@@ -41,7 +41,20 @@ public enum ChordMetrics {
     public static let positionSize: Double = 8.2
     /// right-aligned at this x
     public static let positionX: Double = 22
+    /// string count when frets has fewer than MIN_STRINGS entries
     public static let strings: Int = 6
+    /// fewest strings drawn as given
+    public static let minStrings: Int = 2
+    /// strings past this many are ignored
+    public static let maxStrings: Int = 12
+    /// most fret rows shown; wider shapes keep their highest frets
+    public static let maxRows: Int = 12
+    /// highest fret drawn; "99fr" still fits the gutter
+    public static let maxFret: Int = 99
+    /// finger value drawn as "T"
+    public static let thumb: Int = 5
+    /// string spacing below which open rings and mute crosses shrink to fit
+    public static let markerRoom: Double = 12
 }
 
 /// Default diagram colors as sRGB hex.

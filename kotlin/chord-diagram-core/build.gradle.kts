@@ -43,5 +43,6 @@ tasks.test {
     useJUnitPlatform()
     val golden = rootProject.file("../shared/fixtures/golden.json")
     inputs.file(golden).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(rootProject.file("../shared/fixtures/fuzz.json")).withPathSensitivity(PathSensitivity.RELATIVE)
     systemProperty("chordDiagram.golden", golden.absolutePath)
 }

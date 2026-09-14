@@ -71,6 +71,16 @@
         { "chord": "F" },
         { "chord": "F", "options": { "showFingers": false } }
       ]
+    },
+    "nonstandard": {
+      "title": "Non-standard chords: C on a 4-string ukulele, E minor on a 7-string guitar, a six-fret Csus2 stretch, and D over F sharp with the thumb",
+      "columns": 4,
+      "cells": [
+        { "chord": { "name": "C", "frets": [0, 0, 0, 3], "fingers": [0, 0, 0, 3], "tuning": ["G", "C", "E", "A"] }, "caption": "ukulele" },
+        { "chord": { "name": "E minor", "frets": [0, 0, 2, 2, 0, 0, 0], "fingers": [0, 0, 2, 3, 0, 0, 0], "tuning": ["B", "E", "A", "D", "G", "B", "E"] }, "caption": "7-string" },
+        { "chord": { "name": "Csus2", "frets": [-1, 3, 5, 7, 8, -1], "fingers": [0, 1, 2, 3, 4, 0] }, "caption": "6-fret stretch" },
+        { "chord": { "name": "D/F♯", "frets": [2, -1, 0, 2, 3, 2], "fingers": [5, 0, 0, 1, 3, 2] }, "caption": "thumb on F♯" }
+      ]
     }
   },
   "anatomy": {

@@ -9,23 +9,23 @@ object ChordMetrics {
     const val WIDTH: Double = 146.0
     /** canvas height */
     const val HEIGHT: Double = 118.0
-    /** x of string 1 (low E); 0..32 is the gutter the "Nfr" marker lives in */
+    /** x of the lowest string; 0..32 is the gutter the "Nfr" marker lives in */
     const val LEFT: Double = 32.0
-    /** string-to-string distance -> box is 5 * 18 = 90 wide */
+    /** string spacing on a 6-string grid; the outer strings are always 5 * 18 = 90 apart */
     const val SPACING: Double = 18.0
     /** y of the playable area's top edge (bottom edge of the nut) */
     const val NUT_Y: Double = 34.0
-    /** fret-row height */
+    /** fret-row height with 4 rows; more rows share the same 80 */
     const val GAP: Double = 20.0
-    /** fret rows shown at once */
+    /** fewest fret rows shown */
     const val SPAN: Int = 4
     /** fret-line thickness */
     const val LINE_W: Double = 1.2
     /** nut thickness (1st position only) */
     const val NUT_W: Double = 3.6
-    /** low-E thickness */
+    /** lowest string's thickness */
     const val STRING_W0: Double = 1.15
-    /** thinner per string toward high e */
+    /** thinner per string toward the highest on a 6-string grid (0.70 at the top) */
     const val STRING_TAPER: Double = 0.09
     /** fretted-note dot radius */
     const val DOT_R: Double = 6.3
@@ -43,7 +43,20 @@ object ChordMetrics {
     const val POSITION_SIZE: Double = 8.2
     /** right-aligned at this x */
     const val POSITION_X: Double = 22.0
+    /** string count when frets has fewer than MIN_STRINGS entries */
     const val STRINGS: Int = 6
+    /** fewest strings drawn as given */
+    const val MIN_STRINGS: Int = 2
+    /** strings past this many are ignored */
+    const val MAX_STRINGS: Int = 12
+    /** most fret rows shown; wider shapes keep their highest frets */
+    const val MAX_ROWS: Int = 12
+    /** highest fret drawn; "99fr" still fits the gutter */
+    const val MAX_FRET: Int = 99
+    /** finger value drawn as "T" */
+    const val THUMB: Int = 5
+    /** string spacing below which open rings and mute crosses shrink to fit */
+    const val MARKER_ROOM: Double = 12.0
 }
 
 /** Default diagram colors as sRGB hex. */

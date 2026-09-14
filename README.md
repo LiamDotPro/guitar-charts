@@ -33,6 +33,8 @@ Chord diagrams for SwiftUI, Jetpack Compose, React and React Native, with the sa
 - **Plain data in, a diagram out.** Frets, optional fingers, an optional barre. No drawing code on your side.
 - **Drawn, not bundled.** SwiftUI and Compose `Canvas`, inline SVG in React, `react-native-svg` in React Native. No WebViews, bitmaps or icon fonts, so it scales cleanly to any size.
 - **Identical everywhere.** All four draw exactly the same geometry.
+- **Any fretted instrument.** Ukulele, bass, banjo or 7-string: 2 to 12 strings, stretches up to 12 frets, and the thumb.
+- **Safe with bad data.** A malformed chord never crashes or spills off the card, and `validateChord` tells you what's wrong.
 - **Export built in.** Vector SVG or PNG at any scale, handed to the share sheet, a download, or your own code.
 - **Accessible.** VoiceOver, TalkBack and web screen readers read the shape out.
 
@@ -52,7 +54,7 @@ Chord diagrams for SwiftUI, Jetpack Compose, React and React Native, with the sa
 }
 ```
 
-Shapes above the 4th fret slide the four-fret window down the neck and label it (`5fr`, `12fr`).
+Shapes above the 4th fret slide the window down the neck and label it (`5fr`, `12fr`). Shapes wider than four frets get a row per fret, `frets` can have 2 to 12 entries for other instruments, and finger `5` is the thumb.
 
 ## Quick start
 
@@ -239,6 +241,67 @@ export const Barres = () => [ChordLibrary.F, a, e].map((chord) => <ChordCard key
 ```
 
 </details>
+
+### Other instruments, wide stretches and the thumb
+
+<p align="center"><img src="docs/images/nonstandard.svg" alt="Non-standard chords: C on a 4-string ukulele, E minor on a 7-string guitar, a six-fret Csus2 stretch, and D over F sharp with the thumb"></p>
+
+<details>
+<summary>Show code</summary>
+
+```swift
+let ukuleleC = Chord(name: "C", frets: [0, 0, 0, 3], fingers: [0, 0, 0, 3], tuning: ["G", "C", "E", "A"])
+let sevenStringEm = Chord(name: "E minor", frets: [0, 0, 2, 2, 0, 0, 0], fingers: [0, 0, 2, 3, 0, 0, 0])
+let stretch = Chord(name: "Csus2", frets: [-1, 3, 5, 7, 8, -1], fingers: [0, 1, 2, 3, 4, 0])
+let thumb = Chord(name: "D/F♯", frets: [2, -1, 0, 2, 3, 2], fingers: [5, 0, 0, 1, 3, 2]) // 5 = thumb
+
+HStack(spacing: 12) {
+    ForEach([ukuleleC, sevenStringEm, stretch, thumb], id: \.self) { ChordCard($0) }
+}
+```
+
+```kotlin
+val ukuleleC = Chord(name = "C", frets = listOf(0, 0, 0, 3), fingers = listOf(0, 0, 0, 3), tuning = listOf("G", "C", "E", "A"))
+val sevenStringEm = Chord(name = "E minor", frets = listOf(0, 0, 2, 2, 0, 0, 0), fingers = listOf(0, 0, 2, 3, 0, 0, 0))
+val stretch = Chord(name = "Csus2", frets = listOf(-1, 3, 5, 7, 8, -1), fingers = listOf(0, 1, 2, 3, 4, 0))
+val thumb = Chord(name = "D/F♯", frets = listOf(2, -1, 0, 2, 3, 2), fingers = listOf(5, 0, 0, 1, 3, 2)) // 5 = thumb
+
+Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    listOf(ukuleleC, sevenStringEm, stretch, thumb).forEach { ChordCard(it, Modifier.weight(1f)) }
+}
+```
+
+```tsx
+const ukuleleC: Chord = { name: "C", frets: [0, 0, 0, 3], fingers: [0, 0, 0, 3], tuning: ["G", "C", "E", "A"] };
+const sevenStringEm: Chord = { name: "E minor", frets: [0, 0, 2, 2, 0, 0, 0], fingers: [0, 0, 2, 3, 0, 0, 0] };
+const stretch: Chord = { name: "Csus2", frets: [-1, 3, 5, 7, 8, -1], fingers: [0, 1, 2, 3, 4, 0] };
+const thumb: Chord = { name: "D/F♯", frets: [2, -1, 0, 2, 3, 2], fingers: [5, 0, 0, 1, 3, 2] }; // 5 = thumb
+
+export const NonStandard = () =>
+  [ukuleleC, sevenStringEm, stretch, thumb].map((chord) => <ChordCard key={chord.name} chord={chord} />);
+```
+
+</details>
+
+### Check chord data
+
+A malformed chord never crashes a diagram: invalid frets, fingers and barres are left out instead of drawn off the card. `validateChord` lists what was left out, each with a stable `code` and a `path`.
+
+```swift
+for issue in chord.validate() {
+    print(issue.code, issue.path, issue.message)
+}
+```
+
+```kotlin
+validateChord(chord).forEach { println("${it.code} ${it.path}: ${it.message}") }
+```
+
+```ts
+for (const issue of validateChord(chord)) {
+  console.warn(issue.code, issue.path, issue.message);
+}
+```
 
 ### A chord chart for a song
 

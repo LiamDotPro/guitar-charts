@@ -17,7 +17,8 @@ export function Greeting() {
 ```
 
 - **Components:** `ChordDiagram` (the diagram alone), `ChordCard` (with name, caption and export link) and `ChordSheet` (a full demo sheet)
-- **Data:** `frets` run low E to high e, with `-1` muted and `0` open; `fingers`, `barre` and `caption` are optional
+- **Data:** one `frets` entry per string, 2 to 12 of them (so ukulele, bass and 7-string chords work too), with `-1` muted and `0` open; `fingers` (5 is the thumb), `barre`, `caption` and `tuning` are optional
+- **Safe with bad data:** malformed chords never throw or draw off the card; `validateChord` lists what's wrong
 - **Export:** with `showDownload`, the card passes an SVG or base64 PNG file to your `onExport` callback, to save or share with e.g. expo-sharing. Without one, iOS opens the share sheet.
 - **Fonts:** iOS uses Helvetica Neue and Android the system sans-serif; supply your own with `ChordFontsProvider`
 - **Accessible:** each diagram is labelled with a spoken description for VoiceOver and TalkBack

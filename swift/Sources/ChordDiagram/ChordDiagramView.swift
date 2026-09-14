@@ -89,27 +89,6 @@ enum ChordDiagramRenderer {
     }
 }
 
-extension Chord {
-    /// English VoiceOver label, e.g. "C chord. low E muted, A fret 3 finger 3, …".
-    var spokenDescription: String {
-        let names = ["low E", "A", "D", "G", "B", "high E"]
-        let strings = frets.enumerated().map { i, fret -> String in
-            let string = i < names.count ? names[i] : "string \(i + 1)"
-            if fret < 0 { return "\(string) muted" }
-            if fret == 0 { return "\(string) open" }
-            if let fingers, i < fingers.count, fingers[i] != 0 {
-                return "\(string) fret \(fret) finger \(fingers[i])"
-            }
-            return "\(string) fret \(fret)"
-        }
-        var label = "\(name ?? "") chord".trimmingCharacters(in: .whitespaces)
-        if let barre {
-            label += ", barre at fret \(barre.fret)"
-        }
-        return label + ". " + strings.joined(separator: ", ")
-    }
-}
-
 #Preview("Diagrams") {
     HStack(spacing: 24) {
         ChordDiagramView(ChordLibrary.c)

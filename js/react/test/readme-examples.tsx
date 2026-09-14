@@ -1,6 +1,17 @@
 // Every React snippet in the root README: typechecked by tsconfig.readme.json and
 // rendered by readme.test.tsx. The bodies are pasted into the README; keep them in sync.
-import { ChordCard, ChordLibrary, ChordShapes, ChordTokens, chordPng, chordSvg, downloadChord, layoutChord, type Chord } from "../src/index.js";
+import {
+  ChordCard,
+  ChordLibrary,
+  ChordShapes,
+  ChordTokens,
+  chordPng,
+  chordSvg,
+  downloadChord,
+  layoutChord,
+  validateChord,
+  type Chord,
+} from "../src/index.js";
 
 export function Greeting() {
   return <ChordCard chord={ChordLibrary.C} style={{ width: 148 }} />;
@@ -56,3 +67,17 @@ export const DrawItYourself = () => (
     <ChordShapes layout={layoutChord(ChordLibrary.Am)} />
   </svg>
 );
+
+const ukuleleC: Chord = { name: "C", frets: [0, 0, 0, 3], fingers: [0, 0, 0, 3], tuning: ["G", "C", "E", "A"] };
+const sevenStringEm: Chord = { name: "E minor", frets: [0, 0, 2, 2, 0, 0, 0], fingers: [0, 0, 2, 3, 0, 0, 0] };
+const stretch: Chord = { name: "Csus2", frets: [-1, 3, 5, 7, 8, -1], fingers: [0, 1, 2, 3, 4, 0] };
+const thumb: Chord = { name: "D/F♯", frets: [2, -1, 0, 2, 3, 2], fingers: [5, 0, 0, 1, 3, 2] }; // 5 = thumb
+
+export const NonStandard = () =>
+  [ukuleleC, sevenStringEm, stretch, thumb].map((chord) => <ChordCard key={chord.name} chord={chord} />);
+
+export function logIssues(chord: Chord) {
+  for (const issue of validateChord(chord)) {
+    console.warn(issue.code, issue.path, issue.message);
+  }
+}

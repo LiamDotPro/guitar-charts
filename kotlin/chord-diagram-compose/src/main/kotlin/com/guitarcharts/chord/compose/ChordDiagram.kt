@@ -34,6 +34,7 @@ import com.guitarcharts.chord.ChordLayout
 import com.guitarcharts.chord.ChordLayoutOptions
 import com.guitarcharts.chord.ChordLibrary
 import com.guitarcharts.chord.layoutChord
+import com.guitarcharts.chord.spokenDescription
 
 /**
  * The diagram alone — grid, markers, dots, barre, finger numbers — drawn from
@@ -119,26 +120,6 @@ fun DrawScope.drawChordLayout(layout: ChordLayout, textMeasurer: TextMeasurer, f
         }
         drawText(result, topLeft = Offset(left, anchor.y - result.firstBaseline))
     }
-}
-
-/** English TalkBack label, e.g. "C chord. low E muted, A fret 3 finger 3, …". */
-internal fun Chord.spokenDescription(): String {
-    val names = listOf("low E", "A", "D", "G", "B", "high E")
-    val strings = frets.mapIndexed { i, fret ->
-        val string = names.getOrElse(i) { "string ${i + 1}" }
-        val finger = fingers?.getOrNull(i)?.takeIf { it != 0 }
-        when {
-            fret < 0 -> "$string muted"
-            fret == 0 -> "$string open"
-            finger != null -> "$string fret $fret finger $finger"
-            else -> "$string fret $fret"
-        }
-    }
-    val label = buildString {
-        append("${name.orEmpty()} chord".trim())
-        barre?.let { append(", barre at fret ${it.fret}") }
-    }
-    return "$label. ${strings.joinToString(", ")}"
 }
 
 @Preview(widthDp = 480)
